@@ -20,7 +20,6 @@ public class Categoria {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
-    @Column(unique = true)
     private String nombre;
 
     @NotBlank(message = "La descripción es obligatoria")

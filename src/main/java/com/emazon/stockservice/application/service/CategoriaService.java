@@ -1,8 +1,8 @@
 package com.emazon.stockservice.application.service;
 
 import com.emazon.stockservice.domain.Categoria;
+import com.emazon.stockservice.exception.CategoriaDuplicadaException;
 import com.emazon.stockservice.infratructure.repository.CategoriaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
@@ -29,6 +28,12 @@ public class CategoriaService {
     }
 
     public Categoria createCategoria(Categoria categoria) {
+
+        Optional<Categoria> existingCategoria = categoriaRepository.findByNombre(categoria.getNombre());
+
+        if (existingCategoria.isPresent()) {
+            throw new CategoriaDuplicadaException("La categoría con nombre '" + categoria.getNombre() + "' ya existe.");
+        }
         return categoriaRepository.save(categoria);
     }
 
