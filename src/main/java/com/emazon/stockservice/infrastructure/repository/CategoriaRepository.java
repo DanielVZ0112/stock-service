@@ -1,4 +1,4 @@
-package com.emazon.stockservice.infratructure.repository;
+package com.emazon.stockservice.infrastructure.repository;
 
 import com.emazon.stockservice.domain.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;

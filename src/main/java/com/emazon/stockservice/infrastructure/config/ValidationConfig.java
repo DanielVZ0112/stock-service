@@ -1,4 +1,4 @@
-package com.emazon.stockservice.config;
+package com.emazon.stockservice.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
