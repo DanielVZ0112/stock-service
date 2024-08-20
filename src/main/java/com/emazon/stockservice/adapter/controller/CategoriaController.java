@@ -2,10 +2,11 @@ package com.emazon.stockservice.adapter.controller;
 
 import com.emazon.stockservice.application.service.CategoriaService;
 import com.emazon.stockservice.domain.Categoria;
-import com.emazon.stockservice.dto.CategoriaDTO;
+import com.emazon.stockservice.infrastructure.dto.CategoriaDTO;
 import com.emazon.stockservice.exception.CategoriaDuplicateException;
 import com.emazon.stockservice.infrastructure.mapper.CategoriaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,44 +20,38 @@ import java.util.stream.Collectors;
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
-    private final CategoriaMapper categoriaMapper;
 
     @Autowired
-    public CategoriaController(CategoriaService categoriaService, CategoriaMapper categoriaMapper) {
+    public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
-        this.categoriaMapper = categoriaMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaDTO>> getAllCategorias() {
-        List<CategoriaDTO> categoriasDTO = categoriaService.getAllCategorias().stream()
-                .map(categoriaMapper::toCategoriaDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(categoriasDTO);
+    public Page<CategoriaDTO> listarCategorias(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nombre") String sortBy,
+            @RequestParam(defaultValue = "asc") String order) {
+
+        return categoriaService.listarCategorias(page, size, sortBy, order);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable Long id) {
-        Optional<Categoria> categoria = categoriaService.getCategoriaById(id);
-        return categoria.map(categoriaMapper::toCategoriaDTO)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public CategoriaDTO getCategoriaById(@PathVariable Long id) {
+        return categoriaService.getCategoriaById(id)
+                .map(categoria -> categoriaService.getCategoriaMapper().toCategoriaDTO(categoria))
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategoria(@RequestBody CategoriaDTO categoriaDTO) {
-        try {
-            Categoria categoria = categoriaMapper.toCategoria(categoriaDTO);
-            Categoria createdCategoria = categoriaService.createCategoria(categoria);
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoriaMapper.toCategoriaDTO(createdCategoria));
-        } catch (CategoriaDuplicateException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+    public CategoriaDTO createCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+        Categoria categoria = categoriaService.getCategoriaMapper().toCategoria(categoriaDTO);
+        Categoria createdCategoria = categoriaService.createCategoria(categoria);
+        return categoriaService.getCategoriaMapper().toCategoriaDTO(createdCategoria);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
+    public void deleteCategoria(@PathVariable Long id) {
         categoriaService.deleteCategoria(id);
-        return ResponseEntity.noContent().build();
     }
 }

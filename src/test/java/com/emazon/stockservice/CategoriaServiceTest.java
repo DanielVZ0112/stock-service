@@ -1,21 +1,24 @@
-package com.emazon.stockservice.application.service;
+package com.emazon.stockservice;
 
+import com.emazon.stockservice.application.service.CategoriaService;
 import com.emazon.stockservice.domain.Categoria;
+import com.emazon.stockservice.exception.CategoriaDuplicateException;
 import com.emazon.stockservice.infrastructure.repository.CategoriaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import com.emazon.stockservice.exception.CategoriaDuplicateException;
 import org.junit.jupiter.api.Assertions;
 
-@SpringBootTest
+import java.util.Optional;
+
 public class CategoriaServiceTest {
 
     @Mock
@@ -33,31 +36,51 @@ public class CategoriaServiceTest {
     public void testCreateCategoria() {
         Categoria categoria = new Categoria();
         categoria.setNombre("Ropa");
-        categoria.setDescripcion("Ropa para hombres, mujeres y niños, incluyendo camisas, pantalones, abrigos y más.");
+        categoria.setDescripcion("Descripción");
 
         when(categoriaRepository.save(any(Categoria.class))).thenReturn(categoria);
 
         Categoria result = categoriaService.createCategoria(categoria);
 
         assertEquals("Ropa", result.getNombre());
-        assertEquals("Ropa para hombres, mujeres y niños, incluyendo camisas, pantalones, abrigos y más.", result.getDescripcion());
+        assertEquals("Descripción", result.getDescripcion());
         verify(categoriaRepository).save(categoria);
     }
+
     @Test
     public void testCreateCategoria_AlreadyExists() {
         Categoria categoria = new Categoria();
         categoria.setNombre("Ropa");
-        categoria.setDescripcion("Ropa para hombres, mujeres y niños, incluyendo camisas, pantalones, abrigos y más.");
+        categoria.setDescripcion("Descripción");
 
         when(categoriaRepository.existsByNombre(any(String.class))).thenReturn(true);
 
-        // Usa assertThrows para verificar que se lanza la excepción esperada
         CategoriaDuplicateException thrown = Assertions.assertThrows(
                 CategoriaDuplicateException.class,
-                () -> categoriaService.createCategoria(categoria),
-                "Expected createCategoria() to throw CategoriaYaExisteException, but it didn't"
+                () -> categoriaService.createCategoria(categoria)
         );
 
         assertEquals("La categoría con nombre 'Ropa' ya existe.", thrown.getMessage());
+    }
+    @Test
+    public void testGetCategoriaById() {
+        Categoria categoria = new Categoria();
+        categoria.setId(1L);
+        categoria.setNombre("Electronics");
+        categoria.setDescripcion("Electronics items");
+
+        when(categoriaRepository.findById(1L)).thenReturn(Optional.of(categoria));
+
+        Categoria result = categoriaService.getCategoriaById(1L).orElse(null);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("Electronics", result.getNombre());
+    }
+
+    @Test
+    public void testDeleteCategoria() {
+        categoriaService.deleteCategoria(1L);
+        verify(categoriaRepository).deleteById(1L);
     }
 }
