@@ -1,8 +1,8 @@
-package com.emazon.stockservice.application.service;
+package com.emazon.stockservice.application;
 
 import com.emazon.stockservice.domain.Categoria;
-import com.emazon.stockservice.exception.CategoriaDuplicateException;
-import com.emazon.stockservice.infrastructure.dto.CategoriaDTO;
+import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDuplicateException;
+import com.emazon.stockservice.application.dto.CategoriaDTO;
 import com.emazon.stockservice.infrastructure.mapper.CategoriaMapper;
 import com.emazon.stockservice.infrastructure.repository.CategoriaRepository;
 import lombok.Getter;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,7 +42,7 @@ public class CategoriaService {
 
     public Categoria createCategoria(Categoria categoria) {
         Optional<Categoria> existingCategoria = categoriaRepository.findByNombre(categoria.getNombre());
-
+//Capa de domain mover
         if (categoria.getNombre() == null || categoria.getNombre().length() > 50) {
             throw new IllegalArgumentException("El nombre de la categoría debe tener un máximo de 50 caracteres.");
         }

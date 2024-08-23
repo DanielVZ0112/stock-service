@@ -1,16 +1,19 @@
-package com.emazon.stockservice.infrastructure.mapper;
+package com.emazon.stockservice.application.mapper;
 
-import com.emazon.stockservice.domain.Categoria;
 import com.emazon.stockservice.application.dto.CategoriaDTO;
+import com.emazon.stockservice.domain.model.Categoria;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface CategoriaMapper {
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy =ReportingPolicy.IGNORE,
+        unmappedSourcePolicy = ReportingPolicy.IGNORE)
+public interface CategoriaDTOMapper {
 
-    CategoriaMapper INSTANCE = Mappers.getMapper(CategoriaMapper.class);
+    CategoriaDTOMapper INSTANCE = Mappers.getMapper(CategoriaDTOMapper.class);
 
     CategoriaDTO toCategoriaDTO(Categoria categoria);
 

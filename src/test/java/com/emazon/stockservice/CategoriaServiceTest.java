@@ -1,8 +1,8 @@
 package com.emazon.stockservice;
 
-import com.emazon.stockservice.application.service.CategoriaService;
+import com.emazon.stockservice.application.CategoriaService;
 import com.emazon.stockservice.domain.Categoria;
-import com.emazon.stockservice.exception.CategoriaDuplicateException;
+import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDuplicateException;
 import com.emazon.stockservice.infrastructure.repository.CategoriaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

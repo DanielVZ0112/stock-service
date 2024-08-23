@@ -1,19 +1,11 @@
 package com.emazon.stockservice.adapter.controller;
 
-import com.emazon.stockservice.application.service.CategoriaService;
+import com.emazon.stockservice.application.CategoriaService;
 import com.emazon.stockservice.domain.Categoria;
-import com.emazon.stockservice.infrastructure.dto.CategoriaDTO;
-import com.emazon.stockservice.exception.CategoriaDuplicateException;
-import com.emazon.stockservice.infrastructure.mapper.CategoriaMapper;
+import com.emazon.stockservice.application.dto.CategoriaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/categorias")

@@ -1,6 +1,5 @@
-package com.emazon.stockservice.adapter.controller;
+package com.emazon.stockservice.infrastructure.categoriaException;
 
-import com.emazon.stockservice.exception.CategoriaDuplicateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
