@@ -1,10 +1,13 @@
 package com.emazon.stockservice.application.handler;
 
-import com.emazon.stockservice.application.dto.CategoriaDTO;
-import com.emazon.stockservice.application.mapper.CategoriaDTOMapper;
+import com.emazon.stockservice.application.dto.CategoriaDTORequest;
+import com.emazon.stockservice.application.dto.CategoriaDTOResponse;
+import com.emazon.stockservice.application.mapper.CategoriaDTOMapperRequest;
+import com.emazon.stockservice.application.mapper.CategoriaDTOMapperResponse;
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombreMaximumCharacterExcepcion;
+import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,51 +17,64 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CategoriaHandler implements iCategoriaHandler{
+public class CategoriaHandler implements iCategoriaHandler {
 
     private final iCategoriaServicePort categorizeServicePort;
-    private final CategoriaDTOMapper categoriaDTOMapper;
+    private final CategoriaDTOMapperResponse categoriaDTOMapperResponse;
+    private final CategoriaDTOMapperRequest categoriaDTOMapperRequest;
 
     @Override
-    public void createCategoriaInStockService(CategoriaDTO categoriaDTO) {
-
-        if (categoriaDTO.getNombre().length() > 50) {
+    public void createCategoriaInStockService(CategoriaDTORequest categoriaDTORequest) {
+        if (categoriaDTORequest.getNombre().length() > 50) {
             throw new CategoriaNombreMaximumCharacterExcepcion(50);
         }
 
-        Categoria categoria = categoriaDTOMapper.toCategoria(categoriaDTO);
+        Categoria categoria = categoriaDTOMapperRequest.toCategoria(categoriaDTORequest);
 
         if (categoria == null || categoria.getNombre() == null || categoria.getDescripcion() == null) {
-            throw new RuntimeException("Error al mapear el DTO a la entidad de dominio");
+            throw new CategoriaNotFoundException();
         }
 
         categorizeServicePort.createCategoria(categoria);
     }
 
     @Override
-    public List<CategoriaDTO> getAllCategoriasFromStockService() {
-        List<Categoria> categorias = categorizeServicePort.getAllCategorias();
-        System.out.println("Categorias from service port: " + categorias);
-        return categoriaDTOMapper.toCategoriaDTOList(categorizeServicePort.getAllCategorias());
+    public List<CategoriaDTOResponse> getAllCategoriasFromStockService() {
+        List<Categoria> categoria = categorizeServicePort.getAllCategorias();
+        return categoriaDTOMapperResponse.toCategoriaDTOResponseList(categoria);
     }
 
     @Override
-    public CategoriaDTO getCategoriaFromStockService(Long id) {
+    public CategoriaDTOResponse getCategoriaFromStockService(Long id) {
         Categoria categoria = categorizeServicePort.getCategoria(id);
-        return categoriaDTOMapper.toCategoriaDTO(categoria);
+        if (categoria == null) {
+            throw new CategoriaNotFoundException();
+        }
+        return categoriaDTOMapperResponse.toCategoriaDTOResponse(categoria);
     }
 
     @Override
-    public void updateCategoriaInStckService(CategoriaDTO categoriaDTO) {
-        Categoria categoriaExit = categorizeServicePort.getCategoria(categoriaDTO.getId());
-        Categoria categoria = categoriaDTOMapper.toCategoria(categoriaDTO);
-        categoria.setId(categoriaExit.getId());
-        categorizeServicePort.createCategoria(categoria);
+    public void updateCategoriaInStckService(CategoriaDTORequest categoriaDTORequest) {
+        if (categoriaDTORequest.getId() == null) {
+            throw new CategoriaNotFoundException();
+        }
+
+        Categoria categoriaExit = categorizeServicePort.getCategoria(categoriaDTORequest.getId());
+        if (categoriaExit == null) {
+            throw new CategoriaNotFoundException();
+        }
+
+        Categoria newCategoria = categoriaDTOMapperRequest.toCategoria(categoriaDTORequest);
+        newCategoria.setId(categoriaExit.getId());
+        categorizeServicePort.updateCategoria(newCategoria);
     }
 
     @Override
     public void deleteCategoriaFromStockService(Long id) {
         Categoria categoria = categorizeServicePort.getCategoria(id);
-        categorizeServicePort.deleteCategoria(categoria.getId());
+        if (categoria == null) {
+            throw new CategoriaNotFoundException();
+        }
+        categorizeServicePort.deleteCategoria(id);
     }
 }

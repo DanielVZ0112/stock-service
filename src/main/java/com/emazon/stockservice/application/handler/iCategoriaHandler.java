@@ -1,18 +1,19 @@
 package com.emazon.stockservice.application.handler;
 
-import com.emazon.stockservice.application.dto.CategoriaDTO;
+import com.emazon.stockservice.application.dto.CategoriaDTORequest;
+import com.emazon.stockservice.application.dto.CategoriaDTOResponse;
 
 import java.util.List;
 
 public interface iCategoriaHandler {
 
-    void createCategoriaInStockService(CategoriaDTO categoriaDTO);
+    void createCategoriaInStockService(CategoriaDTORequest categoriaDTORequest);
 
-    List<CategoriaDTO> getAllCategoriasFromStockService();
+    List<CategoriaDTOResponse> getAllCategoriasFromStockService();
 
-    CategoriaDTO getCategoriaFromStockService(Long id);
+    CategoriaDTOResponse getCategoriaFromStockService(Long id);
 
-    void updateCategoriaInStckService(CategoriaDTO categoria);
+    void updateCategoriaInStckService(CategoriaDTORequest categoriaDTORequest);
 
     void deleteCategoriaFromStockService(Long id);
 }
