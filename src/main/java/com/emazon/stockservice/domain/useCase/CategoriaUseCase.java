@@ -16,7 +16,8 @@ public class CategoriaUseCase implements iCategoriaServicePort {
 
     @Override
     public Categoria createCategoria(Categoria categoria) {
-        categoriaPersistencePort.saveCategoria(categoria);
+        categoriaPersistencePort.createCategoria(categoria);
+        System.out.println(categoria + "Log 3");
         return categoria;
     }
 

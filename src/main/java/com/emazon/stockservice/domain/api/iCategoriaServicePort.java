@@ -5,6 +5,7 @@ import com.emazon.stockservice.domain.model.Categoria;
 import java.util.List;
 
 public interface iCategoriaServicePort {
+
     Categoria createCategoria(Categoria categoria);
 
     List<Categoria> getAllCategorias();

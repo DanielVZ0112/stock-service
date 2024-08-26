@@ -1,8 +1,10 @@
-package com.emazon.stockservice.infrastructure.adapter;
+package com.emazon.stockservice.infrastructure.output.jpa.adapter;
 
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
+import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDescripcionMaximumCharacterException;
 import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDuplicateException;
+import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombreMaximumCharacterExcepcion;
 import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNotFoundException;
 import com.emazon.stockservice.infrastructure.output.jpa.entity.CategoriaEntity;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.CategoriaEntityMapper;
@@ -20,16 +22,19 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
 
     @Override
     public void createCategoria(Categoria categoria) {
-        if (categoria.getNombre() == null || categoria.getNombre().length() > 50) {
-            throw new IllegalArgumentException("El nombre de la categoría debe tener un máximo de 50 caracteres.");
+        int maximoNumeroNombreCategorias = 50;
+        if (categoria.getNombre() == null || categoria.getNombre().length() > maximoNumeroNombreCategorias) {
+            throw new CategoriaNombreMaximumCharacterExcepcion(maximoNumeroNombreCategorias);
         }
-        if (categoria.getDescripcion() != null && categoria.getDescripcion().length() > 90) {
-            throw new IllegalArgumentException("La descripción de la categoría debe tener un máximo de 90 caracteres.");
+        int maximoNumeroDescripcionCategorias = 90;
+        if (categoria.getDescripcion() != null && categoria.getDescripcion().length() > maximoNumeroDescripcionCategorias) {
+            throw new CategoriaDescripcionMaximumCharacterException(maximoNumeroDescripcionCategorias);
         }
         if(categoriaRepository.findByNombre(categoria.getNombre()).isPresent()){
             throw new CategoriaDuplicateException(categoria.getNombre());
         }
-        categoriaRepository.save(categoriaEntityMapper.toCategoriaEntity(categoria));
+        CategoriaEntity categoriaEntity = categoriaEntityMapper.toCategoriaEntity(categoria);  // Convierte la entidad de dominio a entidad de infraestructura
+        categoriaRepository.save(categoriaEntity);
     }
 
     @Override

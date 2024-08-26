@@ -12,4 +12,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCategoriaDuplicadaException(CategoriaDuplicateException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CategoriaNotFoundException.class)
+    public ResponseEntity<String> handleCategoriaDuplicadaException(CategoriaNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(CategoriaNombreMaximumCharacterExcepcion.class)
+    public ResponseEntity<String> handleCategoriaDuplicadaException(CategoriaNombreMaximumCharacterExcepcion ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(CategoriaDescripcionMaximumCharacterException.class)
+    public ResponseEntity<String> handleCategoriaDuplicadaException(CategoriaDescripcionMaximumCharacterException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

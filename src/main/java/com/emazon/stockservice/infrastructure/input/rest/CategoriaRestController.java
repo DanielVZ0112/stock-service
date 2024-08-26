@@ -15,8 +15,9 @@ import java.util.List;
 public class CategoriaRestController {
     private final iCategoriaHandler categoriaHandler;
 
-    @PostMapping("/")
+    @PostMapping("/add")
     public ResponseEntity<Void> createCategoriaInStockService(@RequestBody CategoriaDTO categoriaDTO) {
+
         categoriaHandler.createCategoriaInStockService(categoriaDTO);
         return ResponseEntity.status(201).build();
     }
