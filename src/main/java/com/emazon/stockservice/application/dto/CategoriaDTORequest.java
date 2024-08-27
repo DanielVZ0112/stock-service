@@ -7,9 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoriaDTO {
+public class CategoriaDTORequest {
     private Long id;
     private String nombre;
     private String descripcion;
-
 }

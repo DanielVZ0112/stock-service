@@ -33,8 +33,7 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
         if(categoriaRepository.findByNombre(categoria.getNombre()).isPresent()){
             throw new CategoriaDuplicateException(categoria.getNombre());
         }
-        CategoriaEntity categoriaEntity = categoriaEntityMapper.toCategoriaEntity(categoria);  // Convierte la entidad de dominio a entidad de infraestructura
-        categoriaRepository.save(categoriaEntity);
+        categoriaRepository.save(categoriaEntityMapper.toCategoriaEntity(categoria));
     }
 
     @Override
@@ -48,7 +47,7 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
 
     @Override
     public Categoria getCategoria(Long id) {
-        return categoriaEntityMapper.toCategoria(categoriaRepository.findById(id).orElseThrow());
+        return categoriaEntityMapper.toCategoria(categoriaRepository.findById(id).orElseThrow(CategoriaNotFoundException::new));
     }
 
     @Override
@@ -58,7 +57,6 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
 
     @Override
     public void deleteCategoria(Long id) {
-        CategoriaEntity  categoriaEntity = categoriaRepository.findById(id).orElseThrow();
-        categoriaRepository.deleteById(categoriaEntity.getId());
+        categoriaRepository.deleteById(id);
     }
 }

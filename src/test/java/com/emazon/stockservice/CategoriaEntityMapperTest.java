@@ -7,48 +7,62 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class CategoriaEntityMapperTest {
+class CategoriaEntityMapperTest {
 
     @Autowired
-    private CategoriaEntityMapper categoriaEntityMapper;
+    private CategoriaEntityMapper mapper;
 
     @Test
-    public void testToCategoriaEntity() {
-        // Inicializa la instancia de Categoria
-        Categoria categoria = new Categoria();
-        categoria.setIdCategoria(1L);
-        categoria.setNombreCategoria("Electronics");
-        categoria.setDescripcionCategoria("Electronic items");
+    void testToCategoriaEntity() {
+        Categoria categoria = new Categoria(1L, "Electrónica", "Productos tecnológicos");
 
-        // Mapea Categoria a CategoriaEntity
-        CategoriaEntity categoriaEntity = categoriaEntityMapper.toCategoriaEntity(categoria);
+        CategoriaEntity categoriaEntity = mapper.toCategoriaEntity(categoria);
 
-        // Verifica que CategoriaEntity no sea nulo y los valores sean correctos
         assertNotNull(categoriaEntity);
-        assertEquals(categoria.getIdCategoria(), categoriaEntity.getId());
-        assertEquals(categoria.getNombreCategoria(), categoriaEntity.getNombre());
-        assertEquals(categoria.getDescripcionCategoria(), categoriaEntity.getDescripcion());
+        assertEquals(categoria.getId(), categoriaEntity.getId());
+        assertEquals(categoria.getNombre(), categoriaEntity.getNombre());
+        assertEquals(categoria.getDescripcion(), categoriaEntity.getDescripcion());
     }
 
     @Test
-    public void testToCategoria() {
-        // Inicializa la instancia de CategoriaEntity
-        CategoriaEntity categoriaEntity = new CategoriaEntity();
-        categoriaEntity.setId(1L);
-        categoriaEntity.setNombre("Electronics");
-        categoriaEntity.setDescripcion("Electronic items");
+    void testToCategoria() {
+        CategoriaEntity categoriaEntity = new CategoriaEntity(1L, "Electrónica", "Productos tecnológicos");
 
-        // Mapea CategoriaEntity a Categoria
-        Categoria categoria = categoriaEntityMapper.toCategoria(categoriaEntity);
+        Categoria categoria = mapper.toCategoria(categoriaEntity);
 
-        // Verifica que Categoria no sea nulo y los valores sean correctos
         assertNotNull(categoria);
-        assertEquals(categoriaEntity.getId(), categoria.getIdCategoria());
-        assertEquals(categoriaEntity.getNombre(), categoria.getNombreCategoria());
-        assertEquals(categoriaEntity.getDescripcion(), categoria.getDescripcionCategoria());
+        assertEquals(categoriaEntity.getId(), categoria.getId());
+        assertEquals(categoriaEntity.getNombre(), categoria.getNombre());
+        assertEquals(categoriaEntity.getDescripcion(), categoria.getDescripcion());
+    }
+
+    @Test
+    void testToCategoriaList() {
+        CategoriaEntity categoriaEntity1 = new CategoriaEntity(1L, "Electrónica", "Productos tecnológicos");
+        CategoriaEntity categoriaEntity2 = new CategoriaEntity(2L, "Ropa", "Ropa y accesorios");
+        List<CategoriaEntity> categoriaEntityList = Arrays.asList(categoriaEntity1, categoriaEntity2);
+
+        List<Categoria> categoriaList = mapper.toCategoriaList(categoriaEntityList);
+
+        assertNotNull(categoriaList);
+        assertEquals(2, categoriaList.size());
+
+        Categoria categoria1 = categoriaList.get(0);
+        Categoria categoria2 = categoriaList.get(1);
+
+        assertEquals(categoriaEntity1.getId(), categoria1.getId());
+        assertEquals(categoriaEntity1.getNombre(), categoria1.getNombre());
+        assertEquals(categoriaEntity1.getDescripcion(), categoria1.getDescripcion());
+
+        assertEquals(categoriaEntity2.getId(), categoria2.getId());
+        assertEquals(categoriaEntity2.getNombre(), categoria2.getNombre());
+        assertEquals(categoriaEntity2.getDescripcion(), categoria2.getDescripcion());
     }
 }
