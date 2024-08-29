@@ -3,7 +3,7 @@ package com.emazon.stockservice.infrastructure.configuration;
 
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
-import com.emazon.stockservice.domain.useCase.CategoriaUseCase;
+import com.emazon.stockservice.domain.categoriausecase.CategoriaUseCase;
 import com.emazon.stockservice.infrastructure.output.jpa.adapter.CategoriaJpaAdapter;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.CategoriaEntityMapper;
 import com.emazon.stockservice.infrastructure.output.jpa.repository.iCategoriaRepository;

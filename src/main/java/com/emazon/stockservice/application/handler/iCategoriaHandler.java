@@ -2,14 +2,15 @@ package com.emazon.stockservice.application.handler;
 
 import com.emazon.stockservice.application.dto.CategoriaDTORequest;
 import com.emazon.stockservice.application.dto.CategoriaDTOResponse;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface iCategoriaHandler {
 
     void createCategoriaInStockService(CategoriaDTORequest categoriaDTORequest);
 
-    List<CategoriaDTOResponse> getAllCategoriasFromStockService();
+    Page<CategoriaDTOResponse> getAllCategoriasFromStockService(Pageable pageable);
 
     CategoriaDTOResponse getCategoriaFromStockService(Long id);
 

@@ -10,9 +10,13 @@ import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombre
 import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +43,9 @@ public class CategoriaHandler implements iCategoriaHandler {
     }
 
     @Override
-    public List<CategoriaDTOResponse> getAllCategoriasFromStockService() {
-        List<Categoria> categoria = categorizeServicePort.getAllCategorias();
-        return categoriaDTOMapperResponse.toCategoriaDTOResponseList(categoria);
+    public Page<CategoriaDTOResponse> getAllCategoriasFromStockService(Pageable pageable) {
+        List<Categoria> categoriaList = categorizeServicePort.getAllCategorias(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString());
+        return categoriaDTOMapperResponse.toCategoriaDTOResponsePage(categoriaList);
     }
 
     @Override

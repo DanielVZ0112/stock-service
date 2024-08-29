@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class CategoriaDTOMapperRequestTest {
+class CategoriaDTOMapperRequestTest {
     @Autowired
     private CategoriaDTOMapperRequest mapper;
 
     @Test
-    public void testToCategoria() {
+    void testToCategoria() {
         CategoriaDTORequest dtoRequest = new CategoriaDTORequest();
         dtoRequest.setId(1L);
         dtoRequest.setNombre("Electrónica");

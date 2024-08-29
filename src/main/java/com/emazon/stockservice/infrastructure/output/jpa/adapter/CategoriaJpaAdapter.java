@@ -10,6 +10,10 @@ import com.emazon.stockservice.infrastructure.output.jpa.entity.CategoriaEntity;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.CategoriaEntityMapper;
 import com.emazon.stockservice.infrastructure.output.jpa.repository.iCategoriaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -22,14 +26,6 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
 
     @Override
     public void createCategoria(Categoria categoria) {
-        int maximoNumeroNombreCategorias = 50;
-        if (categoria.getNombre() == null || categoria.getNombre().length() > maximoNumeroNombreCategorias) {
-            throw new CategoriaNombreMaximumCharacterExcepcion(maximoNumeroNombreCategorias);
-        }
-        int maximoNumeroDescripcionCategorias = 90;
-        if (categoria.getDescripcion() != null && categoria.getDescripcion().length() > maximoNumeroDescripcionCategorias) {
-            throw new CategoriaDescripcionMaximumCharacterException(maximoNumeroDescripcionCategorias);
-        }
         if(categoriaRepository.findByNombre(categoria.getNombre()).isPresent()){
             throw new CategoriaDuplicateException(categoria.getNombre());
         }
@@ -37,22 +33,23 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
     }
 
     @Override
-    public List<Categoria> getAllCategorias() {
-        List<CategoriaEntity> categoriaEntityList = categoriaRepository.findAll();
-        if(categoriaEntityList.isEmpty()){
-            throw new CategoriaNotFoundException();
-        }
-        return categoriaEntityMapper.toCategoriaList(categoriaEntityList);
+    public List<Categoria> getAllCategorias(int page, int size, String sortDirection) {
+        Pageable pageable = PageRequest.of(page, size, sortDirection.equals("asc") ? Sort.by("nombre").ascending() : Sort.by("nombre").descending());
+        Page<CategoriaEntity> categoriaPage = categoriaRepository.findAll(pageable);
+        return categoriaPage.map(categoriaEntityMapper::toCategoria).toList();
     }
 
     @Override
     public Categoria getCategoria(Long id) {
-        return categoriaEntityMapper.toCategoria(categoriaRepository.findById(id).orElseThrow(CategoriaNotFoundException::new));
+        return categoriaRepository.findById(id)
+                .map(categoriaEntityMapper::toCategoria)
+                .orElse(null);
     }
 
     @Override
     public void updateCategoria(Categoria categoria) {
-        categoriaRepository.save(categoriaEntityMapper.toCategoriaEntity(categoria));
+        CategoriaEntity categoriaEntity = categoriaEntityMapper.toCategoriaEntity(categoria);
+        categoriaRepository.save(categoriaEntity);
     }
 
     @Override

@@ -8,7 +8,7 @@ public interface iCategoriaServicePort {
 
     Categoria createCategoria(Categoria categoria);
 
-    List<Categoria> getAllCategorias();
+    List<Categoria> getAllCategorias(int pageNumber, int pageSize, String string);
 
     Categoria getCategoria(Long id);
 
