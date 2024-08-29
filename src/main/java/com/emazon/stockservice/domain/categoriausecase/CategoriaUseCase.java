@@ -17,14 +17,13 @@ public class CategoriaUseCase implements iCategoriaServicePort {
     @Override
     public Categoria createCategoria(Categoria categoria) {
         categoriaPersistencePort.createCategoria(categoria);
-        System.out.println(categoria + "Log 3");
         return categoria;
     }
 
 
     @Override
-    public List<Categoria> getAllCategorias() {
-        return categoriaPersistencePort.getAllCategorias();
+    public List<Categoria> getAllCategorias(int pageNumber, int pageSize, String string) {
+        return categoriaPersistencePort.getAllCategorias(int pageNumber, int pageSize, String string);
     }
 
     @Override
