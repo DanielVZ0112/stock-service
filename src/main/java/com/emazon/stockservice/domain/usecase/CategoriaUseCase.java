@@ -1,10 +1,10 @@
-package com.emazon.stockservice.domain.categoriausecase;
+package com.emazon.stockservice.domain.usecase;
 
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDescripcionMaximumCharacterException;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombreMaximumCharacterExcepcion;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaDescripcionMaximumCharacterException;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNombreMaximumCharacterExcepcion;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class CategoriaUseCase implements iCategoriaServicePort {
     public Categoria createCategoria(Categoria categoria) {
         int maximoNumeroNombreCategorias = 50;
         if (categoria.getNombre() == null || categoria.getNombre().length() > maximoNumeroNombreCategorias) {
-            throw new CategoriaNombreMaximumCharacterExcepcion(maximoNumeroNombreCategorias);
+            throw new CategoriaNombreMaximumCharacterExcepcion("maximo",maximoNumeroNombreCategorias);
         }
         int maximoNumeroDescripcionCategorias = 90;
         if (categoria.getDescripcion() != null && categoria.getDescripcion().length() > maximoNumeroDescripcionCategorias) {

@@ -14,7 +14,7 @@ public interface iCategoriaHandler {
 
     CategoriaDTOResponse getCategoriaFromStockService(Long id);
 
-    void updateCategoriaInStckService(CategoriaDTORequest categoriaDTORequest);
+    void updateCategoriaInStockService(CategoriaDTORequest categoriaDTORequest);
 
     void deleteCategoriaFromStockService(Long id);
 }

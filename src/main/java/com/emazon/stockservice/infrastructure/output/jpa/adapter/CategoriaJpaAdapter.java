@@ -2,10 +2,7 @@ package com.emazon.stockservice.infrastructure.output.jpa.adapter;
 
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDescripcionMaximumCharacterException;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaDuplicateException;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombreMaximumCharacterExcepcion;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNotFoundException;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaDuplicateException;
 import com.emazon.stockservice.infrastructure.output.jpa.entity.CategoriaEntity;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.CategoriaEntityMapper;
 import com.emazon.stockservice.infrastructure.output.jpa.repository.iCategoriaRepository;

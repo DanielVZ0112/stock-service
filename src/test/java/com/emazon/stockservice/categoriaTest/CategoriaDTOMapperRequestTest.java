@@ -1,4 +1,4 @@
-package com.emazon.stockservice;
+package com.emazon.stockservice.categoriaTest;
 
 import com.emazon.stockservice.application.dto.CategoriaDTORequest;
 import com.emazon.stockservice.application.mapper.CategoriaDTOMapperRequest;

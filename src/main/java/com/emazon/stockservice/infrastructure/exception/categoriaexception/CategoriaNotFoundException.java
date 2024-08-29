@@ -1,4 +1,4 @@
-package com.emazon.stockservice.infrastructure.categoriaException;
+package com.emazon.stockservice.infrastructure.exception.categoriaexception;
 
 public class CategoriaNotFoundException extends RuntimeException {
     public CategoriaNotFoundException() {

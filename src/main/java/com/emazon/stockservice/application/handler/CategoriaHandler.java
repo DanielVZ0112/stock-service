@@ -6,8 +6,8 @@ import com.emazon.stockservice.application.mapper.CategoriaDTOMapperRequest;
 import com.emazon.stockservice.application.mapper.CategoriaDTOMapperResponse;
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.model.Categoria;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNombreMaximumCharacterExcepcion;
-import com.emazon.stockservice.infrastructure.categoriaException.CategoriaNotFoundException;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNombreMaximumCharacterExcepcion;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ public class CategoriaHandler implements iCategoriaHandler {
     @Override
     public void createCategoriaInStockService(CategoriaDTORequest categoriaDTORequest) {
         if (categoriaDTORequest.getNombre().length() > 50) {
-            throw new CategoriaNombreMaximumCharacterExcepcion(50);
+            throw new CategoriaNombreMaximumCharacterExcepcion("maximo",50);
         }
 
         Categoria categoria = categoriaDTOMapperRequest.toCategoria(categoriaDTORequest);
@@ -58,7 +58,7 @@ public class CategoriaHandler implements iCategoriaHandler {
     }
 
     @Override
-    public void updateCategoriaInStckService(CategoriaDTORequest categoriaDTORequest) {
+    public void updateCategoriaInStockService(CategoriaDTORequest categoriaDTORequest) {
         if (categoriaDTORequest.getId() == null) {
             throw new CategoriaNotFoundException();
         }

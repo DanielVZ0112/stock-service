@@ -17,28 +17,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/categoria")
+@RequestMapping("/api/categoria/")
 @RequiredArgsConstructor
 public class CategoriaRestController {
     private final iCategoriaHandler categoriaHandler;
-
+    @PostMapping("add")
     @Operation(summary = "Crear una nueva categoría")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Categoría creada"),
             @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content)
     })
-    @PostMapping("/add")
     public ResponseEntity<Void> createCategoriaInStockService(@RequestBody CategoriaDTORequest categoriaDTORequest) {
         categoriaHandler.createCategoriaInStockService(categoriaDTORequest);
         return ResponseEntity.status(201).build();
     }
-
+    @GetMapping("getAll")
     @Operation(summary = "Listar todas las categorías con paginación y orden")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de categorías obtenida correctamente",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
     })
-    @GetMapping("/getAll")
     public ResponseEntity<Page<CategoriaDTOResponse>> getAllCategoriasFromStockService(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
@@ -47,35 +45,32 @@ public class CategoriaRestController {
         Pageable pageable = PageRequest.of(page, size, sortDirection.equals("asc") ? Sort.by("nombre").ascending() : Sort.by("nombre").descending());
         return ResponseEntity.ok(categoriaHandler.getAllCategoriasFromStockService(pageable));
     }
-
+    @GetMapping("getBy/{id}")
     @Operation(summary = "Obtener una categoría por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categoría obtenida correctamente",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTOResponse.class))),
             @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
     })
-    @GetMapping("/getBy/{id}")
     public ResponseEntity<CategoriaDTOResponse> getCategoriaFromStockService(@PathVariable(name="id") Long id){
         return ResponseEntity.ok(categoriaHandler.getCategoriaFromStockService(id));
     }
-
+    @PutMapping("update")
     @Operation(summary = "Actualizar una categoría existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Categoría actualizada"),
             @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content)
     })
-    @PutMapping("/update")
     public ResponseEntity<Void> updateCategoriaFromStockService(@RequestBody CategoriaDTORequest categoriaDTORequest){
-        categoriaHandler.updateCategoriaInStckService(categoriaDTORequest);
+        categoriaHandler.updateCategoriaInStockService(categoriaDTORequest);
         return ResponseEntity.noContent().build();
     }
-
+    @DeleteMapping("delete/{id}")
     @Operation(summary = "Eliminar una categoría por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Categoría eliminada"),
             @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
     })
-    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategoriaFromStockService(@PathVariable(name="id") Long id){
         categoriaHandler.deleteCategoriaFromStockService(id);
         return ResponseEntity.noContent().build();

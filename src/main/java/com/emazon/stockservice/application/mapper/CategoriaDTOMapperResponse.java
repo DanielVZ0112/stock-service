@@ -16,11 +16,9 @@ public interface CategoriaDTOMapperResponse {
     @Mapping(source = "descripcion", target = "descripcion")
     CategoriaDTOResponse toCategoriaDTOResponse(Categoria categoria);
 
-    List<CategoriaDTOResponse> toCategoriaDTOResponseList(List<Categoria> categorias);
+    List<CategoriaDTOResponse> toCategoriaDTOResponseList(List<Categoria> categoria);
 
     default Page<CategoriaDTOResponse> toCategoriaDTOResponsePage(List<Categoria> categoriaList) {
         return new PageImpl<>(toCategoriaDTOResponseList(categoriaList));
     }
-
-    
 }

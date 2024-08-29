@@ -1,6 +1,6 @@
-package com.emazon.stockservice;
+package com.emazon.stockservice.categoriaTest;
 
-import com.emazon.stockservice.domain.categoriausecase.CategoriaUseCase;
+import com.emazon.stockservice.domain.usecase.CategoriaUseCase;
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
 import org.junit.jupiter.api.BeforeEach;
