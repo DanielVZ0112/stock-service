@@ -1,4 +1,4 @@
-package com.emazon.stockservice;
+package com.emazon.stockservice.categoriaTest;
 
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.infrastructure.output.jpa.entity.CategoriaEntity;
