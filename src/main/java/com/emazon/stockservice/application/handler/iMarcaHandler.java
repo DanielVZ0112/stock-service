@@ -2,13 +2,14 @@ package com.emazon.stockservice.application.handler;
 
 import com.emazon.stockservice.application.dto.MarcaDTORequest;
 import com.emazon.stockservice.application.dto.MarcaDTOResponse;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface iMarcaHandler {
     void createMarcaInStockService(MarcaDTORequest marcaDTORequest);
 
-    List<MarcaDTOResponse> getAllMarcaFromStockService();
+    Page<MarcaDTOResponse> getAllMarcaFromStockService(Pageable pageable);
 
     MarcaDTOResponse getMarcaFromStockService(Long id);
 

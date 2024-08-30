@@ -2,11 +2,11 @@ package com.emazon.stockservice.domain.usecase;
 
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.model.Categoria;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaDescripcionMaximumCharacterException;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNombreMaximumCharacterExcepcion;
 
-import java.util.List;
 
 public class CategoriaUseCase implements iCategoriaServicePort {
 
@@ -17,7 +17,7 @@ public class CategoriaUseCase implements iCategoriaServicePort {
     }
 
     @Override
-    public Categoria createCategoria(Categoria categoria) {
+    public void createCategoria(Categoria categoria) {
         int maximoNumeroNombreCategorias = 50;
         if (categoria.getNombre() == null || categoria.getNombre().length() > maximoNumeroNombreCategorias) {
             throw new CategoriaNombreMaximumCharacterExcepcion("maximo",maximoNumeroNombreCategorias);
@@ -27,12 +27,11 @@ public class CategoriaUseCase implements iCategoriaServicePort {
             throw new CategoriaDescripcionMaximumCharacterException(maximoNumeroDescripcionCategorias);
         }
         categoriaPersistencePort.createCategoria(categoria);
-        return categoria;
     }
 
 
     @Override
-    public List<Categoria> getAllCategorias(int pageNumber, int pageSize, String sortDirection) {
+    public PaginatedResult<Categoria> getAllCategorias(int pageNumber, int pageSize, String sortDirection) {
         if (pageNumber < 0) {
             pageNumber = 0;
         }

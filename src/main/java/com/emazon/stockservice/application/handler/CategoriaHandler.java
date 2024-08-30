@@ -6,16 +6,16 @@ import com.emazon.stockservice.application.mapper.CategoriaDTOMapperRequest;
 import com.emazon.stockservice.application.mapper.CategoriaDTOMapperResponse;
 import com.emazon.stockservice.domain.api.iCategoriaServicePort;
 import com.emazon.stockservice.domain.model.Categoria;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNombreMaximumCharacterExcepcion;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 
 @Service
@@ -30,7 +30,7 @@ public class CategoriaHandler implements iCategoriaHandler {
     @Override
     public void createCategoriaInStockService(CategoriaDTORequest categoriaDTORequest) {
         if (categoriaDTORequest.getNombre().length() > 50) {
-            throw new CategoriaNombreMaximumCharacterExcepcion("maximo",50);
+            throw new CategoriaNombreMaximumCharacterExcepcion("máximo",50);
         }
 
         Categoria categoria = categoriaDTOMapperRequest.toCategoria(categoriaDTORequest);
@@ -44,8 +44,8 @@ public class CategoriaHandler implements iCategoriaHandler {
 
     @Override
     public Page<CategoriaDTOResponse> getAllCategoriasFromStockService(Pageable pageable) {
-        List<Categoria> categoriaList = categorizeServicePort.getAllCategorias(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString());
-        return categoriaDTOMapperResponse.toCategoriaDTOResponsePage(categoriaList);
+        PaginatedResult<Categoria> paginatedResult = categorizeServicePort.getAllCategorias(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString());
+        return new PageImpl<>(categoriaDTOMapperResponse.toCategoriaDTOResponseList(paginatedResult.getContent()), pageable, paginatedResult.getTotalElements());
     }
 
     @Override

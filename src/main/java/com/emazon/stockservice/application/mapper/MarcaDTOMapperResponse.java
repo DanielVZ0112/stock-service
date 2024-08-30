@@ -4,6 +4,9 @@ import com.emazon.stockservice.application.dto.MarcaDTOResponse;
 import com.emazon.stockservice.domain.model.Marca;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
 
 import java.util.List;
 
@@ -16,5 +19,8 @@ public interface MarcaDTOMapperResponse {
 
     List<MarcaDTOResponse> toMarcaDTOResponseList(List<Marca> marca);
 
+    default Page<MarcaDTOResponse> toMarcaDTOResponsePage(List<Marca> marcaList) {
+        return new PageImpl<>(toMarcaDTOResponseList(marcaList));
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.emazon.stockservice.categoriaTest;
 
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.domain.usecase.CategoriaUseCase;
 import com.emazon.stockservice.domain.model.Categoria;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
@@ -39,10 +40,16 @@ class CategoriaUseCaseTest {
     void testGetAllCategorias(int inputPageNumber, int inputPageSize, String inputSortDirection,
                               int expectedPageNumber, int expectedPageSize, String expectedSortDirection) {
 
-        List<Categoria> expectedCategorias = new ArrayList<>();
-        when(categoriaPersistencePort.getAllCategorias(expectedPageNumber, expectedPageSize, expectedSortDirection)).thenReturn(expectedCategorias);
+        List<Categoria> categoriaList = new ArrayList<>();
+        categoriaList.add(new Categoria(1L, "Categoría 1", "Descripción 1"));
+        categoriaList.add(new Categoria(2L, "Categoría 2", "Descripción 2"));
 
-        List<Categoria> result = categoriaUseCase.getAllCategorias(inputPageNumber, inputPageSize, inputSortDirection);
+        PaginatedResult<Categoria> expectedCategorias = new PaginatedResult<>(categoriaList, expectedPageNumber, expectedPageSize);
+
+        when(categoriaPersistencePort.getAllCategorias(expectedPageNumber, expectedPageSize, expectedSortDirection))
+                .thenReturn(expectedCategorias);
+
+        PaginatedResult<Categoria> result = categoriaUseCase.getAllCategorias(inputPageNumber, inputPageSize, inputSortDirection);
 
         assertEquals(expectedCategorias, result);
         verify(categoriaPersistencePort).getAllCategorias(expectedPageNumber, expectedPageSize, expectedSortDirection);

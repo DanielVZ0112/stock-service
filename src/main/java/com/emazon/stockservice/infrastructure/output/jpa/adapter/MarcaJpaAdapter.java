@@ -1,6 +1,7 @@
 package com.emazon.stockservice.infrastructure.output.jpa.adapter;
 
 import com.emazon.stockservice.domain.model.Marca;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.domain.spi.iMarcaPersistencePort;
 import com.emazon.stockservice.infrastructure.exception.marcaexception.MarcaDuplicateException;
 import com.emazon.stockservice.infrastructure.exception.marcaexception.MarcaNotFoundException;
@@ -8,6 +9,10 @@ import com.emazon.stockservice.infrastructure.output.jpa.entity.MarcaEntity;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.MarcaEntityMapper;
 import com.emazon.stockservice.infrastructure.output.jpa.repository.iMarcaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -27,12 +32,18 @@ public class MarcaJpaAdapter implements iMarcaPersistencePort {
     }
 
     @Override
-    public List<Marca> getAllMarca() {
-        List<MarcaEntity> marcaEntityList = marcaRepository.findAll();
-        if(marcaEntityList.isEmpty()){
-            throw new MarcaNotFoundException();
-        }
-        return marcaEntityMapper.toMarcaList(marcaEntityList);
+    public PaginatedResult<Marca> getAllMarca(int page, int size, String sortDirection) {
+        Pageable pageable = PageRequest.of(page, size,
+                sortDirection.equalsIgnoreCase("asc")
+                        ? Sort.by("nombre").ascending()
+                        : Sort.by("nombre").descending());
+        Page<MarcaEntity> marcaEntities = marcaRepository.findAll(pageable);
+
+        List<Marca> marcas = marcaEntities.stream()
+                .map(marcaEntityMapper::toMarca)
+                .toList();
+
+        return new PaginatedResult<>(marcas, page, size);
     }
 
     @Override
