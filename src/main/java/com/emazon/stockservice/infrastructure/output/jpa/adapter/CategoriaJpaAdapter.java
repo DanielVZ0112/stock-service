@@ -1,8 +1,11 @@
 package com.emazon.stockservice.infrastructure.output.jpa.adapter;
 
 import com.emazon.stockservice.domain.model.Categoria;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.domain.spi.iCategoriaPersistencePort;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaDuplicateException;
+import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNotFoundException;
+import com.emazon.stockservice.infrastructure.exception.marcaexception.MarcaNotFoundException;
 import com.emazon.stockservice.infrastructure.output.jpa.entity.CategoriaEntity;
 import com.emazon.stockservice.infrastructure.output.jpa.mapper.CategoriaEntityMapper;
 import com.emazon.stockservice.infrastructure.output.jpa.repository.iCategoriaRepository;
@@ -30,10 +33,14 @@ public class CategoriaJpaAdapter implements iCategoriaPersistencePort {
     }
 
     @Override
-    public List<Categoria> getAllCategorias(int page, int size, String sortDirection) {
+    public PaginatedResult<Categoria> getAllCategorias(int page, int size, String sortDirection) {
         Pageable pageable = PageRequest.of(page, size, sortDirection.equals("asc") ? Sort.by("nombre").ascending() : Sort.by("nombre").descending());
         Page<CategoriaEntity> categoriaPage = categoriaRepository.findAll(pageable);
-        return categoriaPage.map(categoriaEntityMapper::toCategoria).toList();
+        if(categoriaPage.isEmpty()){
+            throw new CategoriaNotFoundException() ;
+        }
+        List<Categoria> categoriaList = categoriaPage.map(categoriaEntityMapper::toCategoria).toList();
+        return new PaginatedResult<>(categoriaList,categoriaPage.getTotalPages(),categoriaPage.getTotalElements());
     }
 
     @Override

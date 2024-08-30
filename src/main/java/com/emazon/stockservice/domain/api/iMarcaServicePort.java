@@ -1,14 +1,15 @@
 package com.emazon.stockservice.domain.api;
 
 import com.emazon.stockservice.domain.model.Marca;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 
 import java.util.List;
 
 public interface iMarcaServicePort {
 
-    Marca createMarca(Marca marca);
+    void createMarca(Marca marca);
 
-    List<Marca> getAllMarca();
+    PaginatedResult<Marca> getAllMarca(int pageNumber, int pageSize, String sortDirection);
 
     Marca getMarca(Long id);
 

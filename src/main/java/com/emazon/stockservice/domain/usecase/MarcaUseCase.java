@@ -2,11 +2,10 @@ package com.emazon.stockservice.domain.usecase;
 
 import com.emazon.stockservice.domain.api.iMarcaServicePort;
 import com.emazon.stockservice.domain.model.Marca;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 import com.emazon.stockservice.domain.spi.iMarcaPersistencePort;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaDescripcionMaximumCharacterException;
 import com.emazon.stockservice.infrastructure.exception.categoriaexception.CategoriaNombreMaximumCharacterExcepcion;
-
-import java.util.List;
 
 public class MarcaUseCase implements iMarcaServicePort {
 
@@ -17,7 +16,7 @@ public class MarcaUseCase implements iMarcaServicePort {
     }
 
     @Override
-    public Marca createMarca(Marca marca) {
+    public void createMarca(Marca marca) {
         int maximoNumeroNombreMarca = 50;
         if (marca.getNombre() == null || marca.getNombre().length() > maximoNumeroNombreMarca) {
             throw new CategoriaNombreMaximumCharacterExcepcion("maximo",maximoNumeroNombreMarca);
@@ -27,12 +26,20 @@ public class MarcaUseCase implements iMarcaServicePort {
             throw new CategoriaDescripcionMaximumCharacterException(maximoNumeroDescripcionMarca);
         }
         marcaPersistencePort.createMarca(marca);
-        return marca;
     }
 
     @Override
-    public List<Marca> getAllMarca() {
-        return marcaPersistencePort.getAllMarca();
+    public PaginatedResult<Marca> getAllMarca(int pageNumber, int pageSize, String sortDirection) {
+        if (pageNumber < 0) {
+            pageNumber = 0;
+        }
+        if (pageSize <= 0) {
+            pageSize = 10;
+        }
+        if (!sortDirection.equalsIgnoreCase("asc") && !sortDirection.equalsIgnoreCase("desc")) {
+            sortDirection = "asc";
+        }
+        return marcaPersistencePort.getAllMarca(pageNumber, pageSize, sortDirection);
     }
 
     @Override

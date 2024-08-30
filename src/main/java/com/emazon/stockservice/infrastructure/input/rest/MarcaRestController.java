@@ -11,16 +11,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/marca/")
 @RequiredArgsConstructor
 public class MarcaRestController {
-
+    private static final Logger log = LoggerFactory.getLogger(MarcaRestController.class);
     private final iMarcaHandler marcaHandler;
     @PostMapping("add")
     @Operation(summary = "Crear una nueva marca")
@@ -39,8 +43,14 @@ public class MarcaRestController {
             @ApiResponse(responseCode = "200", description = "Lista de categorías obtenida correctamente",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
     })
-    public ResponseEntity<List<MarcaDTOResponse>> getAllCategoriasFromStockService() {
-        return ResponseEntity.ok(marcaHandler.getAllMarcaFromStockService());
+    public ResponseEntity<Page<MarcaDTOResponse>> getAllCategoriasFromStockService(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        log.info("Received sortDirection: {}", sortDirection);
+        Pageable pageable = PageRequest.of(page, size, sortDirection.equals("asc") ? Sort.by("nombre").ascending() : Sort.by("nombre").descending());
+        return ResponseEntity.ok(marcaHandler.getAllMarcaFromStockService(pageable));
     }
     @GetMapping("getBy/{id}")
     @Operation(summary = "Obtener una categoría por ID")

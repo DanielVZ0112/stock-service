@@ -1,14 +1,15 @@
 package com.emazon.stockservice.domain.api;
 
 import com.emazon.stockservice.domain.model.Categoria;
+import com.emazon.stockservice.domain.model.PaginatedResult;
 
 import java.util.List;
 
 public interface iCategoriaServicePort {
 
-    Categoria createCategoria(Categoria categoria);
+    void createCategoria(Categoria categoria);
 
-    List<Categoria> getAllCategorias(int pageNumber, int pageSize, String string);
+    PaginatedResult<Categoria> getAllCategorias(int pageNumber, int pageSize, String string);
 
     Categoria getCategoria(Long id);
 
